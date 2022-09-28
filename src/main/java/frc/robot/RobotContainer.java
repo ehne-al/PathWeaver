@@ -15,14 +15,14 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
 public class RobotContainer {
     
-  private String trajectoryJSON = "paths\\output\\test1.wpilib.json";
+  private String trajectoryJSON = "output/test1.wpilib.json";
   private Trajectory trajectory = new Trajectory();
   private DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
 
   public Command getAutonomousCommand() {
       
     TrajectoryConfig config = new TrajectoryConfig(
-        Units.feetToMeters(2.0), Units.feetToMeters(2.0));
+        2, 1);
     config.setKinematics(drivetrain.getKinematics());
 
     try {

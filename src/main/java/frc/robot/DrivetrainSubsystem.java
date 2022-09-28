@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DrivetrainSubsystem extends SubsystemBase {
 
-  private static final double kGearRatio = 7.29;
+  private static final double kGearRatio = 10;
 
   private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(Constants.Drivetrain.LEFT_MASTER_ID);
   private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(Constants.Drivetrain.RIGHT_MASTER_ID);
@@ -86,8 +86,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void setOutputVolts(double leftVolts, double rightVolts) {
-    leftMaster.set(leftVolts / 12);
-    rightMaster.set(rightVolts / 12);
+    leftMaster.set(leftVolts / 20);
+    rightMaster.set(rightVolts / 20);
   }
 
   public void reset() {

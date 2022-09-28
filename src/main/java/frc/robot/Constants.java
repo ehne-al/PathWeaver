@@ -13,8 +13,8 @@ public class Constants {
         public static final double TRACK_WIDTH = 0.381 * 2;
         public static final double WHEEL_RADIUS = 0.0508;
 
-        public static final double MAX_SPEED_METERSECOND = 3.0;
-        public static final double MAX_ACCELERATION_METERSECONDSQUARED = 2.0;
+        public static final double MAX_SPEED_METERSECOND = 2;
+        public static final double MAX_ACCELERATION_METERSECONDSQUARED = 1;
 
         public static final double MAX_ANGULAR_SPEED = Math.PI;
 
@@ -29,10 +29,10 @@ public class Constants {
         public static final int LEFT_ENCODER_A_ID = 0;
         public static final int LEFT_ENCODER_B_ID = 1;
         public static final int RIGHT_ENCODER_A_ID = 2;
-        public static final int RIGHT_ENCODER_B_ID = 3;
+        public static final int RIGHT_ENCODER_B_ID = 4;
 
         //PID
-        public static final double KP = 0;
+        public static final double KP = 0.8;
         public static final double KI = 0;
         public static final double KD = 0;
 
