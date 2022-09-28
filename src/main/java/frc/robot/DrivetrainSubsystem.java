@@ -33,15 +33,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 
-  DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(28));
-  DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading(), getPose());
+  private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(28));
+  private DifferentialDriveOdometry odometry;
 
-  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.3, 1.96, 0.06);
+  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.3, 1.96, 0.06);
 
-  PIDController leftPIDController = new PIDController(Constants.Drivetrain.KP,Constants.Drivetrain.KI,Constants.Drivetrain.KD);
-  PIDController rightPIDController = new PIDController(Constants.Drivetrain.KP,Constants.Drivetrain.KI,Constants.Drivetrain.KD);
+  private PIDController leftPIDController = new PIDController(Constants.Drivetrain.KP,Constants.Drivetrain.KI,Constants.Drivetrain.KD);
+  private PIDController rightPIDController = new PIDController(Constants.Drivetrain.KP,Constants.Drivetrain.KI,Constants.Drivetrain.KD);
 
-  Pose2d pose = new Pose2d();
+  private Pose2d pose = new Pose2d();
 
   public DrivetrainSubsystem() {
     leftSlave.follow(leftMaster);
@@ -49,6 +49,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     leftMaster.setInverted(false);
     rightMaster.setInverted(true);
+    odometry = new DifferentialDriveOdometry(getHeading(), getPose());
 
     gyro.reset();
   }

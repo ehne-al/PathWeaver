@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
 public class RobotContainer {
     
-  private String trajectoryJSON = "paths/test1.wpilib.json";
+  private String trajectoryJSON = "PathWeaver/output/test1.wpilib.json";
   private Trajectory trajectory = new Trajectory();
   private DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
 
