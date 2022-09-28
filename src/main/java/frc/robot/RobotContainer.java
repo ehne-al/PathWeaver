@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
 public class RobotContainer {
     
-  private String trajectoryJSON = "PathWeaver/output/test1.wpilib.json";
+  private String trajectoryJSON = "paths\\output\\test1.wpilib.json";
   private Trajectory trajectory = new Trajectory();
   private DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
 
@@ -26,11 +26,12 @@ public class RobotContainer {
     config.setKinematics(drivetrain.getKinematics());
 
     try {
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-     } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-     }
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+   } catch (IOException ex) {
+
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+   }
 
     RamseteCommand command = new RamseteCommand(
         trajectory,
