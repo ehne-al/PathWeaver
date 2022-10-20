@@ -4,10 +4,10 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,23 +20,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DrivetrainSubsystem extends SubsystemBase {
 
-  private static final double kGearRatio = 10;
-
   private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(Constants.Drivetrain.LEFT_MASTER_ID);
   private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(Constants.Drivetrain.RIGHT_MASTER_ID);
 
   private final WPI_TalonSRX leftSlave = new WPI_TalonSRX(Constants.Drivetrain.LEFT_SLAVE_ID);
   private final WPI_TalonSRX rightSlave = new WPI_TalonSRX(Constants.Drivetrain.RIGHT_SLAVE_ID);
 
-  private final Encoder leftEncoder = new Encoder(Constants.Drivetrain.LEFT_ENCODER_A_ID, Constants.Drivetrain.LEFT_ENCODER_B_ID);
-  private final Encoder rightEncoder = new Encoder(Constants.Drivetrain.RIGHT_ENCODER_A_ID, Constants.Drivetrain.RIGHT_ENCODER_B_ID);
+  //private final Encoder leftEncoder = new Encoder(Constants.Drivetrain.LEFT_ENCODER_A_ID, Constants.Drivetrain.LEFT_ENCODER_B_ID);
+  //private final Encoder rightEncoder = new Encoder(Constants.Drivetrain.RIGHT_ENCODER_A_ID, Constants.Drivetrain.RIGHT_ENCODER_B_ID);
 
-  private ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+  public ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 
   private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(28));
   private DifferentialDriveOdometry odometry;
 
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.3, 1.96, 0.06);
+  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.0003, 0.0002, 0.0006);
 
   private PIDController leftPIDController = new PIDController(Constants.Drivetrain.KP,Constants.Drivetrain.KI,Constants.Drivetrain.KD);
   private PIDController rightPIDController = new PIDController(Constants.Drivetrain.KP,Constants.Drivetrain.KI,Constants.Drivetrain.KD);
@@ -49,6 +47,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     leftMaster.setInverted(false);
     rightMaster.setInverted(true);
+
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 1, 1);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 1);
+
     odometry = new DifferentialDriveOdometry(getHeading(), getPose());
 
     gyro.reset();
@@ -60,9 +62,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public DifferentialDriveWheelSpeeds getSpeeds() {
     return new DifferentialDriveWheelSpeeds(
-        leftEncoder.getDistance() / kGearRatio * 2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS / 60,
-        rightEncoder.getDistance()/ kGearRatio * 2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS / 60
-    );
+        leftMaster.getSelectedSensorVelocity(1),
+        rightMaster.getSelectedSensorVelocity(0));
   }
 
   public DifferentialDriveKinematics getKinematics() {
@@ -85,9 +86,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return rightPIDController;
   }
 
+  public double getLeftEncoderPosition(){
+    return leftMaster.getSelectedSensorPosition(1);
+  } 
+
+  public double getRightEncoderPosition(){
+    return rightMaster.getSelectedSensorPosition(0);
+  } 
+
   public void setOutputVolts(double leftVolts, double rightVolts) {
-    leftMaster.set(leftVolts / 20);
-    rightMaster.set(rightVolts / 20);
+    leftMaster.set(leftVolts / 12);
+    rightMaster.set(rightVolts / 12);
   }
 
   public void reset() {
@@ -96,7 +105,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    pose = odometry.update(getHeading(), leftEncoder.getDistance(), rightEncoder.getDistance());
+    pose = odometry.update(getHeading(), getLeftEncoderPosition(), getRightEncoderPosition());
   }
 }
 
